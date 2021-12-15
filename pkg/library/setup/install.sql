@@ -68,4 +68,4 @@ CREATE TABLE `nging_ftp_user_group` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-14 13:32:57
+-- Dump completed on 2021-12-15 11:40:11
