@@ -1,4 +1,4 @@
-package frpmanager
+package ftpmanager
 
 import (
 	"github.com/nging-plugins/ftpmanager/pkg/handler"
