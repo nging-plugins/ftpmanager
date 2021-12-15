@@ -6,7 +6,7 @@ import (
 	"github.com/admpub/nging/v4/application/handler/setup"
 )
 
-// go:embed install.sql
+//go:embed install.sql
 var installSQL string
 
 func init() {
