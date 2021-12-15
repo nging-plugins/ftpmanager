@@ -46,7 +46,7 @@ type ftpCmd struct {
 }
 
 func (c *ftpCmd) Init() error {
-	return c.getConfig().Init().Start()
+	return c.FTPConfig().Init().Start()
 }
 
 func (c *ftpCmd) getConfig() *config.Config {

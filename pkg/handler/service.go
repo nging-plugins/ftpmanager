@@ -15,15 +15,19 @@
    You should have received a copy of the GNU Affero General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package ftp
+
+package handler
 
 import (
 	"os"
 
+	"github.com/webx-top/echo"
+
 	"github.com/admpub/nging/v4/application/handler"
 	"github.com/admpub/nging/v4/application/library/config"
 	"github.com/admpub/nging/v4/application/library/notice"
-	"github.com/webx-top/echo"
+
+	"github.com/nging-plugins/ftpmanager/pkg/library/cmder"
 )
 
 func Restart(ctx echo.Context) error {
@@ -31,14 +35,14 @@ func Restart(ctx echo.Context) error {
 	if err != nil {
 		return ctx.String(err.Error())
 	}
-	if err := config.DefaultCLIConfig.FTPRestart(wOut, wErr); err != nil {
+	if err := cmder.Get().Restart(wOut, wErr); err != nil {
 		return ctx.String(err.Error())
 	}
 	return ctx.String(ctx.T(`已经重启FTP服务`))
 }
 
 func Stop(ctx echo.Context) error {
-	if err := config.DefaultCLIConfig.FTPStop(); err != nil {
+	if err := cmder.Get().Stop(); err != nil {
 		return ctx.String(err.Error())
 	}
 	return ctx.String(ctx.T(`已经关闭FTP服务`))
