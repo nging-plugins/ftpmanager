@@ -15,7 +15,7 @@ const ID = `ftp`
 var Module = module.Module{
 	Startup: `ftpserver`,
 	Extend: map[string]extend.Initer{
-		ID: pluginCmder.Initer,
+		`ftpserver`: pluginCmder.Initer,
 	},
 	Cmder: map[string]cmder.Cmder{
 		`ftpserver`: pluginCmder.New(),
