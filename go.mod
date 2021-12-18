@@ -28,6 +28,7 @@ require (
 	github.com/admpub/fasthttp v0.0.3 // indirect
 	github.com/admpub/fsnotify v1.5.0 // indirect
 	github.com/admpub/gifresize v1.0.2 // indirect
+	github.com/admpub/go-bindata-assetfs v0.0.0-20170428090253-36eaa4c19588 // indirect
 	github.com/admpub/go-download/v2 v2.1.12 // indirect
 	github.com/admpub/go-isatty v0.0.10 // indirect
 	github.com/admpub/go-password v0.1.3 // indirect
@@ -60,6 +61,7 @@ require (
 	github.com/admpub/sessions v0.1.2 // indirect
 	github.com/admpub/sonyflake v0.0.1 // indirect
 	github.com/admpub/tail v1.1.0 // indirect
+	github.com/admpub/timeago v1.1.3 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect

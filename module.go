@@ -1,8 +1,8 @@
 package ftpmanager
 
 import (
-	"gitee.com/hkcom/nging-core/application/library/config/extend"
 	"github.com/admpub/nging/v4/application/library/config/cmder"
+	"github.com/admpub/nging/v4/application/library/config/extend"
 	"github.com/admpub/nging/v4/application/library/module"
 
 	"github.com/nging-plugins/ftpmanager/pkg/handler"
