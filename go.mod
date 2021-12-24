@@ -9,7 +9,7 @@ require (
 	github.com/admpub/nging/v4 v4.0.0-00010101000000-000000000000
 	github.com/webx-top/com v0.3.5
 	github.com/webx-top/db v1.18.4
-	github.com/webx-top/echo v2.23.4+incompatible
+	github.com/webx-top/echo v2.23.7+incompatible
 	goftp.io/server/v2 v2.0.0
 )
 
