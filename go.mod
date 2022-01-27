@@ -8,7 +8,7 @@ require (
 	github.com/admpub/log v1.3.2
 	github.com/admpub/nging/v4 v4.0.0-00010101000000-000000000000
 	github.com/webx-top/com v0.3.6
-	github.com/webx-top/db v1.20.3
+	github.com/webx-top/db v1.20.5
 	github.com/webx-top/echo v2.24.0+incompatible
 	goftp.io/server/v2 v2.0.0
 )
