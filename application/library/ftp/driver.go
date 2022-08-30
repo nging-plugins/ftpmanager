@@ -26,7 +26,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/nging-plugins/ftpmanager/pkg/model"
+	"github.com/nging-plugins/ftpmanager/application/model"
 	"github.com/webx-top/com"
 	ftpserver "goftp.io/server/v2"
 )

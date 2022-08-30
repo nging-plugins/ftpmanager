@@ -28,7 +28,7 @@ import (
 
 	"github.com/admpub/nging/v4/application/library/common"
 
-	"github.com/nging-plugins/ftpmanager/pkg/dbschema"
+	"github.com/nging-plugins/ftpmanager/application/dbschema"
 )
 
 type FtpUserAndGroup struct {

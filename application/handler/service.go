@@ -27,7 +27,7 @@ import (
 	"github.com/admpub/nging/v4/application/library/config"
 	"github.com/admpub/nging/v4/application/library/notice"
 
-	"github.com/nging-plugins/ftpmanager/pkg/library/cmder"
+	"github.com/nging-plugins/ftpmanager/application/library/cmder"
 )
 
 func Restart(ctx echo.Context) error {

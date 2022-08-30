@@ -12,7 +12,7 @@ import (
 	"github.com/admpub/nging/v4/application/library/config/cmder"
 	"github.com/admpub/nging/v4/application/library/config/extend"
 
-	"github.com/nging-plugins/ftpmanager/pkg/library/ftp"
+	"github.com/nging-plugins/ftpmanager/application/library/ftp"
 )
 
 func init() {

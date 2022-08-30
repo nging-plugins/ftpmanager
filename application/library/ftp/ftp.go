@@ -26,7 +26,7 @@ import (
 	"github.com/webx-top/com"
 	"github.com/webx-top/echo"
 
-	"github.com/nging-plugins/ftpmanager/pkg/model"
+	"github.com/nging-plugins/ftpmanager/application/model"
 	ftpserver "goftp.io/server/v2"
 )
 

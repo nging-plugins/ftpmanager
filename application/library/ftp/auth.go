@@ -19,7 +19,7 @@
 package ftp
 
 import (
-	"github.com/nging-plugins/ftpmanager/pkg/model"
+	"github.com/nging-plugins/ftpmanager/application/model"
 	ftpserver "goftp.io/server/v2"
 )
 

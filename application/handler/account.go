@@ -26,8 +26,8 @@ import (
 
 	"github.com/admpub/nging/v4/application/handler"
 
-	"github.com/nging-plugins/ftpmanager/pkg/dbschema"
-	"github.com/nging-plugins/ftpmanager/pkg/model"
+	"github.com/nging-plugins/ftpmanager/application/dbschema"
+	"github.com/nging-plugins/ftpmanager/application/model"
 )
 
 func AccountIndex(ctx echo.Context) error {

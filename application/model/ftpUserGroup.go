@@ -22,7 +22,7 @@ import (
 	"github.com/webx-top/db"
 	"github.com/webx-top/echo"
 
-	"github.com/nging-plugins/ftpmanager/pkg/dbschema"
+	"github.com/nging-plugins/ftpmanager/application/dbschema"
 )
 
 func NewFtpUserGroup(ctx echo.Context) *FtpUserGroup {
