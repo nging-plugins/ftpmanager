@@ -87,7 +87,6 @@ func (u User) Allowed(path string, modification bool) bool {
 
 	for i >= 0 {
 		rule = u.Rules[i]
-		rulePath := rule.FixedPathPrefixAndSuffix(hasPrefix, hasSuffix)
 
 		isAllowed := rule.Readable
 		if modification {
@@ -101,8 +100,11 @@ func (u User) Allowed(path string, modification bool) bool {
 			if rule.regexp.MatchString(path) {
 				return isAllowed
 			}
-		} else if strings.HasPrefix(path, rulePath) {
-			return isAllowed
+		} else {
+			rulePath := rule.FixedPathPrefixAndSuffix(hasPrefix, hasSuffix)
+			if strings.HasPrefix(path, rulePath) {
+				return isAllowed
+			}
 		}
 
 		i--
