@@ -286,6 +286,7 @@ func setPermissionForm(ctx echo.Context, targetType string, targetID uint) (err 
 		} else {
 			rules.SetForm(ctx)
 		}
+		ctx.Set(`ftpPermissionRules`, rules)
 	}
 	return
 }
