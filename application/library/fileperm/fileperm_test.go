@@ -1,6 +1,7 @@
 package fileperm
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -45,4 +46,7 @@ func TestVerify(t *testing.T) {
 	assert.True(t, allowed)
 	allowed = u.Allowed(`/c/`, true)
 	assert.True(t, allowed)
+
+	assert.Equal(t, `/abc`, filepath.Join(`/abc/`, `.`))
+
 }
