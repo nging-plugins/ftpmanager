@@ -10,7 +10,7 @@
 {{$addingMode:=HasSuffix $.URL.Path "_add"}}
 <div class="row">
     <div class="col-md-12">
-        <div class="block-flat">
+        <div class="block-flat no-padding">
           <div class="header">							
             <h3>{{if $addingMode}}{{"添加FTP账号"|$.T}}{{else}}{{"修改FTP账号"|$.T}}{{end}}</h3>
           </div>
