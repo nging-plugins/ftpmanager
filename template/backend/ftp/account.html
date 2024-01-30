@@ -34,7 +34,7 @@
 							{{- if CmdIsRunning `ftpserver` -}}
                 				<span class="label label-success label-btn-size x-block">{{$.T `运行中(端口:%d)` $.Stored.listenPort}}</span>
                 			{{- else -}}
-                				<span class="label label-default label-btn-size x-block" data-toggle="tooltip" title="{{$.T `请确保有可用账号且FTP端口(%d)未被占用` $.Stored.listenPort}}">{{`已停止`|$.T}}</span>
+                				<span class="label label-default label-btn-size x-block" data-toggle="tooltip" data-container="body" title="{{$.T `请确保有可用账号且FTP端口(%d)未被占用` $.Stored.listenPort}}">{{`已停止`|$.T}}</span>
                 			{{- end -}}
 							</div>
 							<h3>{{"FTP账号列表"|$.T}}</h3>
