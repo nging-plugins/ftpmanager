@@ -1,9 +1,9 @@
 package ftpmanager
 
 import (
-	"github.com/admpub/nging/v5/application/library/config/cmder"
-	"github.com/admpub/nging/v5/application/library/config/extend"
-	"github.com/admpub/nging/v5/application/library/module"
+	"github.com/coscms/webcore/library/config/cmder"
+	"github.com/coscms/webcore/library/config/extend"
+	"github.com/coscms/webcore/library/module"
 
 	"github.com/nging-plugins/ftpmanager/application/handler"
 	pluginCmder "github.com/nging-plugins/ftpmanager/application/library/cmder"

@@ -9,9 +9,9 @@ import (
 	"github.com/webx-top/com"
 	"github.com/webx-top/echo/defaults"
 
-	"github.com/admpub/nging/v5/application/library/config"
-	"github.com/admpub/nging/v5/application/library/config/cmder"
-	"github.com/admpub/nging/v5/application/library/config/extend"
+	"github.com/coscms/webcore/library/config"
+	"github.com/coscms/webcore/library/config/cmder"
+	"github.com/coscms/webcore/library/config/extend"
 
 	"github.com/nging-plugins/ftpmanager/application/library/ftp"
 	"github.com/nging-plugins/ftpmanager/application/model"

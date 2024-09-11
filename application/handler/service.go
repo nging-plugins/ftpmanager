@@ -23,15 +23,15 @@ import (
 
 	"github.com/webx-top/echo"
 
-	"github.com/admpub/nging/v5/application/handler"
-	"github.com/admpub/nging/v5/application/library/config"
-	"github.com/admpub/nging/v5/application/library/notice"
+	"github.com/coscms/webcore/library/backend"
+	"github.com/coscms/webcore/library/config"
+	"github.com/coscms/webcore/library/notice"
 
 	"github.com/nging-plugins/ftpmanager/application/library/cmder"
 )
 
 func Restart(ctx echo.Context) error {
-	wOut, wErr, err := handler.NoticeWriter(ctx, ctx.T(`FTP服务`))
+	wOut, wErr, err := backend.NoticeWriter(ctx, ctx.T(`FTP服务`))
 	if err != nil {
 		return ctx.String(err.Error())
 	}
@@ -51,7 +51,7 @@ func Stop(ctx echo.Context) error {
 func Log(ctx echo.Context) error {
 	on := ctx.Formx(`on`).Bool()
 	if on {
-		wOut, wErr, err := handler.NoticeWriter(ctx, ctx.T(`FTP服务`))
+		wOut, wErr, err := backend.NoticeWriter(ctx, ctx.T(`FTP服务`))
 		if err != nil {
 			return ctx.String(err.Error())
 		}
@@ -65,7 +65,7 @@ func Log(ctx echo.Context) error {
 	if err != nil {
 		return ctx.String(err.Error())
 	}
-	user := handler.User(ctx)
+	user := backend.User(ctx)
 	if user == nil {
 		return ctx.String(ctx.T(`请先登录`))
 	}

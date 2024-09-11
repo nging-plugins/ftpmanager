@@ -26,8 +26,8 @@ import (
 	"github.com/webx-top/echo/code"
 	"github.com/webx-top/echo/formfilter"
 
-	"github.com/admpub/nging/v5/application/handler"
-	"github.com/admpub/nging/v5/application/library/common"
+	"github.com/coscms/webcore/library/backend"
+	"github.com/coscms/webcore/library/common"
 
 	"github.com/nging-plugins/ftpmanager/application/dbschema"
 	"github.com/nging-plugins/ftpmanager/application/library/cmder"
@@ -43,7 +43,7 @@ func AccountIndex(ctx echo.Context) error {
 		cond[`group_id`] = groupId
 	}
 	var userAndGroup []*model.FtpUserAndGroup
-	_, err := handler.PagingWithLister(ctx, handler.NewLister(m, &userAndGroup, func(r db.Result) db.Result {
+	_, err := common.PagingWithLister(ctx, common.NewLister(m, &userAndGroup, func(r db.Result) db.Result {
 		return r.OrderBy(`-id`)
 	}, cond))
 	mg := model.NewFtpUserGroup(ctx)
@@ -53,7 +53,7 @@ func AccountIndex(ctx echo.Context) error {
 	ctx.Set(`groupList`, groupList)
 	ctx.Set(`groupId`, groupId)
 	ctx.Set(`listenPort`, cmder.GetFTPConfig().Port)
-	return ctx.Render(`ftp/account`, handler.Err(ctx, err))
+	return ctx.Render(`ftp/account`, common.Err(ctx, err))
 }
 
 func AccountAdd(ctx echo.Context) error {
@@ -86,8 +86,8 @@ func AccountAdd(ctx echo.Context) error {
 		if m.Banned == `N` {
 			cmder.StartOnce()
 		}
-		handler.SendOk(ctx, ctx.T(`操作成功`))
-		return ctx.Redirect(handler.URLFor(`/ftp/account`))
+		common.SendOk(ctx, ctx.T(`操作成功`))
+		return ctx.Redirect(backend.URLFor(`/ftp/account`))
 	} else {
 		id := ctx.Formx(`copyId`).Uint()
 		if id > 0 {
@@ -155,8 +155,8 @@ func AccountEdit(ctx echo.Context) error {
 				cmder.Stop()
 			}
 		}
-		handler.SendOk(ctx, ctx.T(`操作成功`))
-		return ctx.Redirect(handler.URLFor(`/ftp/account`))
+		common.SendOk(ctx, ctx.T(`操作成功`))
+		return ctx.Redirect(backend.URLFor(`/ftp/account`))
 	} else {
 		echo.StructToForm(ctx, m.NgingFtpUser, ``, func(topName, fieldName string) string {
 			if topName == `` && fieldName == `Password` {
@@ -189,18 +189,18 @@ func AccountDelete(ctx echo.Context) error {
 		if !exists {
 			cmder.Stop()
 		}
-		handler.SendOk(ctx, ctx.T(`操作成功`))
+		common.SendOk(ctx, ctx.T(`操作成功`))
 	} else {
-		handler.SendFail(ctx, err.Error())
+		common.SendFail(ctx, err.Error())
 	}
 
-	return ctx.Redirect(handler.URLFor(`/ftp/account`))
+	return ctx.Redirect(backend.URLFor(`/ftp/account`))
 }
 
 func GroupIndex(ctx echo.Context) error {
 	m := model.NewFtpUserGroup(ctx)
-	_, err := handler.PagingWithLister(ctx, m)
-	ret := handler.Err(ctx, err)
+	_, err := common.PagingWithLister(ctx, m)
+	ret := common.Err(ctx, err)
 	ctx.Set(`listData`, m.Objects())
 	return ctx.Render(`ftp/group`, ret)
 }
@@ -234,8 +234,8 @@ func GroupAdd(ctx echo.Context) error {
 			goto END
 		}
 		ctx.Commit()
-		handler.SendOk(ctx, ctx.T(`操作成功`))
-		return ctx.Redirect(handler.URLFor(`/ftp/group`))
+		common.SendOk(ctx, ctx.T(`操作成功`))
+		return ctx.Redirect(backend.URLFor(`/ftp/group`))
 	} else {
 		id := ctx.Formx(`copyId`).Uint()
 		if id > 0 {
@@ -280,8 +280,8 @@ func GroupEdit(ctx echo.Context) error {
 		if err != nil {
 			goto END
 		}
-		handler.SendOk(ctx, ctx.T(`操作成功`))
-		return ctx.Redirect(handler.URLFor(`/ftp/group`))
+		common.SendOk(ctx, ctx.T(`操作成功`))
+		return ctx.Redirect(backend.URLFor(`/ftp/group`))
 	} else if err == nil {
 		echo.StructToForm(ctx, m.NgingFtpUserGroup, ``, echo.LowerCaseFirstLetter)
 		err = setPermissionForm(ctx, `group`, m.Id)
@@ -333,10 +333,10 @@ func GroupDelete(ctx echo.Context) error {
 	if err == nil {
 		permM := model.NewFtpPermission(ctx)
 		permM.DeleteByTarget(`group`, id)
-		handler.SendOk(ctx, ctx.T(`操作成功`))
+		common.SendOk(ctx, ctx.T(`操作成功`))
 	} else {
-		handler.SendFail(ctx, err.Error())
+		common.SendFail(ctx, err.Error())
 	}
 
-	return ctx.Redirect(handler.URLFor(`/ftp/group`))
+	return ctx.Redirect(backend.URLFor(`/ftp/group`))
 }
