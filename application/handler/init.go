@@ -19,12 +19,12 @@
 package handler
 
 import (
-	"github.com/coscms/webcore/library/route"
+	"github.com/coscms/webcore/library/module"
 	"github.com/webx-top/echo"
 )
 
-func RegisterRoute(r *route.Collection) {
-	r.Backend.RegisterToGroup(`/ftp`, registerRoute)
+func RegisterRoute(r module.Router) {
+	r.Backend().RegisterToGroup(`/ftp`, registerRoute)
 }
 
 func registerRoute(g echo.RouteRegister) {

@@ -28,6 +28,7 @@ import (
 
 	"github.com/coscms/webcore/library/backend"
 	"github.com/coscms/webcore/library/common"
+	"github.com/coscms/webcore/library/nerrors"
 
 	"github.com/nging-plugins/ftpmanager/application/dbschema"
 	"github.com/nging-plugins/ftpmanager/application/library/cmder"
@@ -300,7 +301,7 @@ func setPermissionForm(ctx echo.Context, targetType string, targetID uint) (err 
 		rules := fileperm.Rules{}
 		err = json.Unmarshal(jsonBytes, &rules)
 		if err != nil {
-			err = common.JSONBytesParseError(err, jsonBytes)
+			err = nerrors.JSONBytesParseError(err, jsonBytes)
 		} else {
 			rules.SetForm(ctx)
 		}

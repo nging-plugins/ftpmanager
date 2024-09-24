@@ -29,6 +29,7 @@ import (
 	"github.com/webx-top/echo/code"
 
 	"github.com/coscms/webcore/library/common"
+	"github.com/coscms/webcore/library/nerrors"
 
 	"github.com/nging-plugins/ftpmanager/application/dbschema"
 	"github.com/nging-plugins/ftpmanager/application/library/fileperm"
@@ -101,7 +102,7 @@ func (f *FtpUser) CheckPasswd(username string, password string) (bool, error) {
 			jsonBytes := []byte(groupPermM.NgingFtpPermission.Permission)
 			err = json.Unmarshal(jsonBytes, &groupPermission)
 			if err != nil {
-				return false, common.JSONBytesParseError(err, jsonBytes)
+				return false, nerrors.JSONBytesParseError(err, jsonBytes)
 			}
 		}
 	}
@@ -129,7 +130,7 @@ func (f *FtpUser) CheckPasswd(username string, password string) (bool, error) {
 		jsonBytes := []byte(userPermM.NgingFtpPermission.Permission)
 		err = json.Unmarshal(jsonBytes, &userPermission)
 		if err != nil {
-			return false, common.JSONBytesParseError(err, jsonBytes)
+			return false, nerrors.JSONBytesParseError(err, jsonBytes)
 		}
 	}
 	err = userPermission.Init()
