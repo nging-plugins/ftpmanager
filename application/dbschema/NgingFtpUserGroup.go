@@ -217,10 +217,14 @@ func (a *NgingFtpUserGroup) Struct_() string {
 }
 
 func (a *NgingFtpUserGroup) Name_() string {
-	if a.base.Namer() != nil {
-		return WithPrefix(a.base.Namer()(a))
+	b := a
+	if b == nil {
+		b = &NgingFtpUserGroup{}
 	}
-	return WithPrefix(factory.TableNamerGet(a.Short_())(a))
+	if b.base.Namer() != nil {
+		return WithPrefix(b.base.Namer()(b))
+	}
+	return WithPrefix(factory.TableNamerGet(b.Short_())(b))
 }
 
 func (a *NgingFtpUserGroup) CPAFrom(source factory.Model) factory.Model {
@@ -498,7 +502,7 @@ func (a *NgingFtpUserGroup) UpdateFields(mw func(db.Result) db.Result, kvset map
 	}
 	m := *a
 	m.FromRow(kvset)
-	var editColumns []string
+	editColumns := make([]string, 0, len(kvset))
 	for column := range kvset {
 		editColumns = append(editColumns, column)
 	}
@@ -533,7 +537,7 @@ func (a *NgingFtpUserGroup) UpdatexFields(mw func(db.Result) db.Result, kvset ma
 	}
 	m := *a
 	m.FromRow(kvset)
-	var editColumns []string
+	editColumns := make([]string, 0, len(kvset))
 	for column := range kvset {
 		editColumns = append(editColumns, column)
 	}
@@ -707,6 +711,9 @@ func (a *NgingFtpUserGroup) AsMap(onlyFields ...string) param.Store {
 
 func (a *NgingFtpUserGroup) FromRow(row map[string]interface{}) {
 	for key, value := range row {
+		if _, ok := value.(db.RawValue); ok {
+			continue
+		}
 		switch key {
 		case "id":
 			a.Id = param.AsUint(value)
@@ -729,6 +736,75 @@ func (a *NgingFtpUserGroup) FromRow(row map[string]interface{}) {
 		case "ip_blacklist":
 			a.IpBlacklist = param.AsString(value)
 		}
+	}
+}
+
+func (a *NgingFtpUserGroup) GetField(field string) interface{} {
+	switch field {
+	case "Id":
+		return a.Id
+	case "Name":
+		return a.Name
+	case "Created":
+		return a.Created
+	case "Updated":
+		return a.Updated
+	case "Disabled":
+		return a.Disabled
+	case "Banned":
+		return a.Banned
+	case "Directory":
+		return a.Directory
+	case "Modify":
+		return a.Modify
+	case "IpWhitelist":
+		return a.IpWhitelist
+	case "IpBlacklist":
+		return a.IpBlacklist
+	default:
+		return nil
+	}
+}
+
+func (a *NgingFtpUserGroup) GetAllFieldNames() []string {
+	return []string{
+		"Id",
+		"Name",
+		"Created",
+		"Updated",
+		"Disabled",
+		"Banned",
+		"Directory",
+		"Modify",
+		"IpWhitelist",
+		"IpBlacklist",
+	}
+}
+
+func (a *NgingFtpUserGroup) HasField(field string) bool {
+	switch field {
+	case "Id":
+		return true
+	case "Name":
+		return true
+	case "Created":
+		return true
+	case "Updated":
+		return true
+	case "Disabled":
+		return true
+	case "Banned":
+		return true
+	case "Directory":
+		return true
+	case "Modify":
+		return true
+	case "IpWhitelist":
+		return true
+	case "IpBlacklist":
+		return true
+	default:
+		return false
 	}
 }
 
@@ -819,17 +895,19 @@ func (a *NgingFtpUserGroup) AsRow(onlyFields ...string) param.Store {
 }
 
 func (a *NgingFtpUserGroup) ListPage(cond *db.Compounds, sorts ...interface{}) error {
-	_, err := pagination.NewLister(a, nil, func(r db.Result) db.Result {
-		return r.OrderBy(sorts...)
-	}, cond.And()).Paging(a.Context())
-	return err
+	return pagination.ListPage(a, cond, sorts...)
 }
 
 func (a *NgingFtpUserGroup) ListPageAs(recv interface{}, cond *db.Compounds, sorts ...interface{}) error {
-	_, err := pagination.NewLister(a, recv, func(r db.Result) db.Result {
-		return r.OrderBy(sorts...)
-	}, cond.And()).Paging(a.Context())
-	return err
+	return pagination.ListPageAs(a, recv, cond, sorts...)
+}
+
+func (a *NgingFtpUserGroup) ListPageByOffset(cond *db.Compounds, sorts ...interface{}) error {
+	return pagination.ListPageByOffset(a, cond, sorts...)
+}
+
+func (a *NgingFtpUserGroup) ListPageByOffsetAs(recv interface{}, cond *db.Compounds, sorts ...interface{}) error {
+	return pagination.ListPageByOffsetAs(a, recv, cond, sorts...)
 }
 
 func (a *NgingFtpUserGroup) BatchValidate(kvset map[string]interface{}) error {
