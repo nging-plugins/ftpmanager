@@ -72,6 +72,14 @@ func AccountAdd(ctx echo.Context) error {
 		if err != nil {
 			goto END
 		}
+		err = ipfilter.Validate(ctx, m.IpBlacklist)
+		if err != nil {
+			goto END
+		}
+		err = ipfilter.Validate(ctx, m.IpWhitelist)
+		if err != nil {
+			goto END
+		}
 		ctx.Begin()
 		m.SetContext(ctx)
 		_, err = m.Add()
@@ -140,11 +148,20 @@ func AccountEdit(ctx echo.Context) error {
 		if err != nil {
 			goto END
 		}
+		err = ipfilter.Validate(ctx, m.IpBlacklist)
+		if err != nil {
+			goto END
+		}
+		err = ipfilter.Validate(ctx, m.IpWhitelist)
+		if err != nil {
+			goto END
+		}
 		m.Id = id
 		err = m.Edit(nil, db.Cond{`id`: id})
 		if err != nil {
 			goto END
 		}
+		ipfilter.Factory.DeleteUser(m.Id)
 		err = savePermission(ctx, `user`, m.Id)
 		if err != nil {
 			goto END
@@ -186,6 +203,7 @@ func AccountDelete(ctx echo.Context) error {
 	if err == nil {
 		permM := model.NewFtpPermission(ctx)
 		permM.DeleteByTarget(`user`, id)
+		ipfilter.Factory.DeleteUser(id)
 
 		exists, _ := m.ExistsAvailable()
 		if !exists {
@@ -221,6 +239,14 @@ func GroupAdd(ctx echo.Context) error {
 		} else {
 			err = ctx.MustBind(m.NgingFtpUserGroup)
 		}
+		if err != nil {
+			goto END
+		}
+		err = ipfilter.Validate(ctx, m.IpBlacklist)
+		if err != nil {
+			goto END
+		}
+		err = ipfilter.Validate(ctx, m.IpWhitelist)
 		if err != nil {
 			goto END
 		}
@@ -273,11 +299,20 @@ func GroupEdit(ctx echo.Context) error {
 		if err != nil {
 			goto END
 		}
+		err = ipfilter.Validate(ctx, m.IpBlacklist)
+		if err != nil {
+			goto END
+		}
+		err = ipfilter.Validate(ctx, m.IpWhitelist)
+		if err != nil {
+			goto END
+		}
 		m.Id = id
 		err = m.Update(nil, db.Cond{`id`: id})
 		if err != nil {
 			goto END
 		}
+		ipfilter.Factory.DeleteGroup(m.Id)
 		err = savePermission(ctx, `group`, m.Id)
 		if err != nil {
 			goto END
@@ -312,11 +347,6 @@ func setPermissionForm(ctx echo.Context, targetType string, targetID uint) (err 
 }
 
 func savePermission(ctx echo.Context, targetType string, targetID uint) (err error) {
-	if targetType == `user` {
-		ipfilter.Factory.DeleteUser(targetID)
-	} else {
-		ipfilter.Factory.DeleteGroup(targetID)
-	}
 	permM := model.NewFtpPermission(ctx)
 	var rules fileperm.Rules
 	rules, err = fileperm.ParseForm(ctx)
@@ -340,6 +370,7 @@ func GroupDelete(ctx echo.Context) error {
 	if err == nil {
 		permM := model.NewFtpPermission(ctx)
 		permM.DeleteByTarget(`group`, id)
+		ipfilter.Factory.DeleteGroup(id)
 		common.SendOk(ctx, ctx.T(`操作成功`))
 	} else {
 		common.SendFail(ctx, err.Error())
