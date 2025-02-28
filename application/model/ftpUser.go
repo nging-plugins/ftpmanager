@@ -21,6 +21,8 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"net/netip"
 	"sort"
 
 	"github.com/webx-top/com"
@@ -33,6 +35,7 @@ import (
 
 	"github.com/nging-plugins/ftpmanager/application/dbschema"
 	"github.com/nging-plugins/ftpmanager/application/library/fileperm"
+	"github.com/nging-plugins/ftpmanager/application/library/ipfilter"
 )
 
 type FtpUserAndGroup struct {
@@ -80,6 +83,15 @@ func (f *FtpUser) CheckPasswd(username string, password string) (bool, error) {
 	}
 	if f.Password != com.MakePassword(password, salt) {
 		return false, echo.NewError(`Incorrect password`, code.Unauthenticated)
+	}
+
+	realIP := f.Context().RealIP()
+	ipAddr, err := netip.ParseAddr(realIP)
+	if err != nil {
+		return false, fmt.Errorf(`Invalid IP: %v`, realIP)
+	}
+	if !ipfilter.IsAllowed(f.Context(), f.NgingFtpUser, ipAddr) {
+		return false, nil
 	}
 
 	// 获取根路径

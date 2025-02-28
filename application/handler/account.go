@@ -33,6 +33,7 @@ import (
 	"github.com/nging-plugins/ftpmanager/application/dbschema"
 	"github.com/nging-plugins/ftpmanager/application/library/cmder"
 	"github.com/nging-plugins/ftpmanager/application/library/fileperm"
+	"github.com/nging-plugins/ftpmanager/application/library/ipfilter"
 	"github.com/nging-plugins/ftpmanager/application/model"
 )
 
@@ -311,6 +312,11 @@ func setPermissionForm(ctx echo.Context, targetType string, targetID uint) (err 
 }
 
 func savePermission(ctx echo.Context, targetType string, targetID uint) (err error) {
+	if targetType == `user` {
+		ipfilter.Factory.DeleteUser(targetID)
+	} else {
+		ipfilter.Factory.DeleteGroup(targetID)
+	}
 	permM := model.NewFtpPermission(ctx)
 	var rules fileperm.Rules
 	rules, err = fileperm.ParseForm(ctx)
