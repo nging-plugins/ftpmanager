@@ -91,7 +91,7 @@ func (f *FtpUser) CheckPasswd(username string, password string) (bool, error) {
 		return false, fmt.Errorf(`Invalid IP: %v`, realIP)
 	}
 	if !ipfilter.IsAllowed(f.Context(), f.NgingFtpUser, ipAddr) {
-		return false, nil
+		return false, fmt.Errorf(`Disallowed IP: %v`, realIP)
 	}
 
 	// 获取根路径
