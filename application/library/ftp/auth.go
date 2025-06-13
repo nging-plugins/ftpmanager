@@ -19,6 +19,7 @@
 package ftp
 
 import (
+	"github.com/admpub/log"
 	"github.com/nging-plugins/ftpmanager/application/model"
 	"github.com/webx-top/echo/defaults"
 	ftpserver "goftp.io/server/v2"
@@ -36,5 +37,9 @@ func (a *Auth) CheckPasswd(ftpCtx *ftpserver.Context, username string, password 
 	userModel := model.NewFtpUser(ctx)
 	ftpCtx.Sess.Data[`userModel`] = userModel
 	ftpCtx.Sess.Data[`context`] = ctx
-	return userModel.CheckPasswd(username, password)
+	passwordMatched, err := userModel.CheckPasswd(username, password)
+	if err != nil {
+		log.Debugf(`[FTP] %v`, err)
+	}
+	return passwordMatched, err
 }
