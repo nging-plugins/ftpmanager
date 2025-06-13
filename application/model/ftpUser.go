@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
 	"net/netip"
 	"sort"
 
@@ -84,8 +85,11 @@ func (f *FtpUser) CheckPasswd(username string, password string, realIP string) (
 	if f.Password != com.MakePassword(password, salt) {
 		return false, nil
 	}
-
-	ipAddr, err := netip.ParseAddr(realIP)
+	host, _, err := net.SplitHostPort(realIP)
+	if err != nil {
+		return false, fmt.Errorf(`Invalid IP: %v`, realIP)
+	}
+	ipAddr, err := netip.ParseAddr(host)
 	if err != nil {
 		return false, fmt.Errorf(`Invalid IP: %v`, realIP)
 	}
