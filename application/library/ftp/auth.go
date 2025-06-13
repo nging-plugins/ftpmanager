@@ -37,7 +37,7 @@ func (a *Auth) CheckPasswd(ftpCtx *ftpserver.Context, username string, password 
 	userModel := model.NewFtpUser(ctx)
 	ftpCtx.Sess.Data[`userModel`] = userModel
 	ftpCtx.Sess.Data[`context`] = ctx
-	passwordMatched, err := userModel.CheckPasswd(username, password)
+	passwordMatched, err := userModel.CheckPasswd(username, password, ftpCtx.Sess.RemoteAddr().String())
 	if err != nil {
 		log.Debugf(`[FTP] %v`, err)
 	}

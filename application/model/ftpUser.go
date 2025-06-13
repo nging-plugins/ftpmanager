@@ -72,7 +72,7 @@ func (f *FtpUser) ExistsAvailable() (bool, error) {
 	return f.NgingFtpUser.Exists(nil, cond.And())
 }
 
-func (f *FtpUser) CheckPasswd(username string, password string) (bool, error) { // passwordMatched, err
+func (f *FtpUser) CheckPasswd(username string, password string, realIP string) (bool, error) { // passwordMatched, err
 	salt := common.CookieConfig().BlockKey
 	err := f.NgingFtpUser.Get(nil, db.Cond{`username`: username})
 	if err != nil {
@@ -85,11 +85,11 @@ func (f *FtpUser) CheckPasswd(username string, password string) (bool, error) { 
 		return false, nil
 	}
 
-	realIP := f.Context().RealIP()
 	ipAddr, err := netip.ParseAddr(realIP)
 	if err != nil {
 		return false, fmt.Errorf(`Invalid IP: %v`, realIP)
 	}
+
 	if !ipfilter.IsAllowed(f.Context(), f.NgingFtpUser, ipAddr) {
 		return false, fmt.Errorf(`Disallowed IP: %v`, realIP)
 	}
