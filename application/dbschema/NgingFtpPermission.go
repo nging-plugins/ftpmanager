@@ -15,81 +15,7 @@ import (
 	"github.com/webx-top/echo/param"
 )
 
-type Slice_NgingFtpPermission []*NgingFtpPermission
-
-func (s Slice_NgingFtpPermission) Range(fn func(m factory.Model) error) error {
-	for _, v := range s {
-		if err := fn(v); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (s Slice_NgingFtpPermission) RangeRaw(fn func(m *NgingFtpPermission) error) error {
-	for _, v := range s {
-		if err := fn(v); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (s Slice_NgingFtpPermission) GroupBy(keyField string) map[string][]*NgingFtpPermission {
-	r := map[string][]*NgingFtpPermission{}
-	for _, row := range s {
-		dmap := row.AsMap()
-		vkey := fmt.Sprint(dmap[keyField])
-		if _, y := r[vkey]; !y {
-			r[vkey] = []*NgingFtpPermission{}
-		}
-		r[vkey] = append(r[vkey], row)
-	}
-	return r
-}
-
-func (s Slice_NgingFtpPermission) KeyBy(keyField string) map[string]*NgingFtpPermission {
-	r := map[string]*NgingFtpPermission{}
-	for _, row := range s {
-		dmap := row.AsMap()
-		vkey := fmt.Sprint(dmap[keyField])
-		r[vkey] = row
-	}
-	return r
-}
-
-func (s Slice_NgingFtpPermission) AsKV(keyField string, valueField string) param.Store {
-	r := param.Store{}
-	for _, row := range s {
-		dmap := row.AsMap()
-		vkey := fmt.Sprint(dmap[keyField])
-		r[vkey] = dmap[valueField]
-	}
-	return r
-}
-
-func (s Slice_NgingFtpPermission) Transform(transfers map[string]param.Transfer) []param.Store {
-	r := make([]param.Store, len(s))
-	for idx, row := range s {
-		r[idx] = row.AsMap().Transform(transfers)
-	}
-	return r
-}
-
-func (s Slice_NgingFtpPermission) FromList(data interface{}) Slice_NgingFtpPermission {
-	values, ok := data.([]*NgingFtpPermission)
-	if !ok {
-		for _, value := range data.([]interface{}) {
-			row := &NgingFtpPermission{}
-			row.FromRow(value.(map[string]interface{}))
-			s = append(s, row)
-		}
-		return s
-	}
-	s = append(s, values...)
-
-	return s
-}
+type Slice_NgingFtpPermission = factory.Slicex[*NgingFtpPermission]
 
 func NewNgingFtpPermission(ctx echo.Context) *NgingFtpPermission {
 	m := &NgingFtpPermission{}
@@ -106,8 +32,8 @@ type NgingFtpPermission struct {
 	TargetType string `db:"target_type" bson:"target_type" comment:"目标类型" json:"target_type" xml:"target_type"`
 	TargetId   uint   `db:"target_id" bson:"target_id" comment:"目标ID" json:"target_id" xml:"target_id"`
 	Permission string `db:"permission" bson:"permission" comment:"权限JSON" json:"permission" xml:"permission"`
-	Created    uint   `db:"created" bson:"created" comment:"创建时间" json:"created" xml:"created"`
-	Updated    uint   `db:"updated" bson:"updated" comment:"更新时间" json:"updated" xml:"updated"`
+	Created    uint   `db:"created" bson:"created" comment:"创建时间" json:"created" xml:"created" form_decoder:"time2unix" form_encoder:"unix2time"`
+	Updated    uint   `db:"updated" bson:"updated" comment:"更新时间" json:"updated" xml:"updated" form_decoder:"time2unix" form_encoder:"unix2time"`
 }
 
 // - base function
@@ -223,10 +149,13 @@ func (a *NgingFtpPermission) Name_() string {
 	return WithPrefix(factory.TableNamerGet(b.Short_())(b))
 }
 
+// CPAFrom Deprecated: Use CtxFrom instead.
 func (a *NgingFtpPermission) CPAFrom(source factory.Model) factory.Model {
-	a.SetContext(source.Context())
-	a.SetConnID(source.ConnID())
-	a.SetNamer(source.Namer())
+	return a.CtxFrom(source)
+}
+
+func (a *NgingFtpPermission) CtxFrom(source factory.Model) factory.Model {
+	a.base.CtxFrom(source)
 	return a
 }
 
@@ -238,13 +167,13 @@ func (a *NgingFtpPermission) Get(mw func(db.Result) db.Result, args ...interface
 		return
 	}
 	queryParam := a.Param(mw, args...).SetRecv(a)
-	if err = DBI.FireReading(a, queryParam); err != nil {
+	if err = a.base.FireReading(a, queryParam); err != nil {
 		return
 	}
 	err = queryParam.One()
 	a.base = base
 	if err == nil {
-		err = DBI.FireReaded(a, queryParam)
+		err = a.base.FireReaded(a, queryParam)
 	}
 	return
 }
@@ -257,18 +186,18 @@ func (a *NgingFtpPermission) List(recv interface{}, mw func(db.Result) db.Result
 		return a.Param(mw, args...).SetPage(page).SetSize(size).SetRecv(recv).List()
 	}
 	queryParam := a.Param(mw, args...).SetPage(page).SetSize(size).SetRecv(recv)
-	if err := DBI.FireReading(a, queryParam); err != nil {
+	if err := a.base.FireReading(a, queryParam); err != nil {
 		return nil, err
 	}
 	cnt, err := queryParam.List()
 	if err == nil {
 		switch v := recv.(type) {
 		case *[]*NgingFtpPermission:
-			err = DBI.FireReaded(a, queryParam, Slice_NgingFtpPermission(*v))
+			err = a.base.FireReaded(a, queryParam, Slice_NgingFtpPermission(*v))
 		case []*NgingFtpPermission:
-			err = DBI.FireReaded(a, queryParam, Slice_NgingFtpPermission(v))
+			err = a.base.FireReaded(a, queryParam, Slice_NgingFtpPermission(v))
 		case factory.Ranger:
-			err = DBI.FireReaded(a, queryParam, v)
+			err = a.base.FireReaded(a, queryParam, v)
 		}
 	}
 	return cnt, err
@@ -312,18 +241,18 @@ func (a *NgingFtpPermission) ListByOffset(recv interface{}, mw func(db.Result) d
 		return a.Param(mw, args...).SetOffset(offset).SetSize(size).SetRecv(recv).List()
 	}
 	queryParam := a.Param(mw, args...).SetOffset(offset).SetSize(size).SetRecv(recv)
-	if err := DBI.FireReading(a, queryParam); err != nil {
+	if err := a.base.FireReading(a, queryParam); err != nil {
 		return nil, err
 	}
 	cnt, err := queryParam.List()
 	if err == nil {
 		switch v := recv.(type) {
 		case *[]*NgingFtpPermission:
-			err = DBI.FireReaded(a, queryParam, Slice_NgingFtpPermission(*v))
+			err = a.base.FireReaded(a, queryParam, Slice_NgingFtpPermission(*v))
 		case []*NgingFtpPermission:
-			err = DBI.FireReaded(a, queryParam, Slice_NgingFtpPermission(v))
+			err = a.base.FireReaded(a, queryParam, Slice_NgingFtpPermission(v))
 		case factory.Ranger:
-			err = DBI.FireReaded(a, queryParam, v)
+			err = a.base.FireReaded(a, queryParam, v)
 		}
 	}
 	return cnt, err
@@ -336,7 +265,7 @@ func (a *NgingFtpPermission) Insert() (pk interface{}, err error) {
 		a.TargetType = "group"
 	}
 	if a.base.Eventable() {
-		err = DBI.Fire("creating", a, nil)
+		err = a.base.Fire(factory.EventCreating, a, nil)
 		if err != nil {
 			return
 		}
@@ -350,7 +279,7 @@ func (a *NgingFtpPermission) Insert() (pk interface{}, err error) {
 		}
 	}
 	if err == nil && a.base.Eventable() {
-		err = DBI.Fire("created", a, nil)
+		err = a.base.Fire(factory.EventCreated, a, nil)
 	}
 	return
 }
@@ -363,13 +292,13 @@ func (a *NgingFtpPermission) Update(mw func(db.Result) db.Result, args ...interf
 	if !a.base.Eventable() {
 		return a.Param(mw, args...).SetSend(a).Update()
 	}
-	if err = DBI.Fire("updating", a, mw, args...); err != nil {
+	if err = a.base.Fire(factory.EventUpdating, a, mw, args...); err != nil {
 		return
 	}
 	if err = a.Param(mw, args...).SetSend(a).Update(); err != nil {
 		return
 	}
-	return DBI.Fire("updated", a, mw, args...)
+	return a.base.Fire(factory.EventUpdated, a, mw, args...)
 }
 
 func (a *NgingFtpPermission) Updatex(mw func(db.Result) db.Result, args ...interface{}) (affected int64, err error) {
@@ -380,13 +309,13 @@ func (a *NgingFtpPermission) Updatex(mw func(db.Result) db.Result, args ...inter
 	if !a.base.Eventable() {
 		return a.Param(mw, args...).SetSend(a).Updatex()
 	}
-	if err = DBI.Fire("updating", a, mw, args...); err != nil {
+	if err = a.base.Fire(factory.EventUpdating, a, mw, args...); err != nil {
 		return
 	}
 	if affected, err = a.Param(mw, args...).SetSend(a).Updatex(); err != nil {
 		return
 	}
-	err = DBI.Fire("updated", a, mw, args...)
+	err = a.base.Fire(factory.EventUpdated, a, mw, args...)
 	return
 }
 
@@ -402,13 +331,13 @@ func (a *NgingFtpPermission) UpdateByFields(mw func(db.Result) db.Result, fields
 	for index, field := range fields {
 		editColumns[index] = com.SnakeCase(field)
 	}
-	if err = DBI.FireUpdate("updating", a, editColumns, mw, args...); err != nil {
+	if err = a.base.FireUpdate(factory.EventUpdating, a, editColumns, mw, args...); err != nil {
 		return
 	}
 	if err = a.Param(mw, args...).UpdateByStruct(a, fields...); err != nil {
 		return
 	}
-	err = DBI.FireUpdate("updated", a, editColumns, mw, args...)
+	err = a.base.FireUpdate(factory.EventUpdated, a, editColumns, mw, args...)
 	return
 }
 
@@ -424,13 +353,13 @@ func (a *NgingFtpPermission) UpdatexByFields(mw func(db.Result) db.Result, field
 	for index, field := range fields {
 		editColumns[index] = com.SnakeCase(field)
 	}
-	if err = DBI.FireUpdate("updating", a, editColumns, mw, args...); err != nil {
+	if err = a.base.FireUpdate(factory.EventUpdating, a, editColumns, mw, args...); err != nil {
 		return
 	}
 	if affected, err = a.Param(mw, args...).UpdatexByStruct(a, fields...); err != nil {
 		return
 	}
-	err = DBI.FireUpdate("updated", a, editColumns, mw, args...)
+	err = a.base.FireUpdate(factory.EventUpdated, a, editColumns, mw, args...)
 	return
 }
 
@@ -462,13 +391,13 @@ func (a *NgingFtpPermission) UpdateFields(mw func(db.Result) db.Result, kvset ma
 	for column := range kvset {
 		editColumns = append(editColumns, column)
 	}
-	if err = DBI.FireUpdate("updating", &m, editColumns, mw, args...); err != nil {
+	if err = a.base.FireUpdate(factory.EventUpdating, &m, editColumns, mw, args...); err != nil {
 		return
 	}
 	if err = a.Param(mw, args...).SetSend(kvset).Update(); err != nil {
 		return
 	}
-	return DBI.FireUpdate("updated", &m, editColumns, mw, args...)
+	return a.base.FireUpdate(factory.EventUpdated, &m, editColumns, mw, args...)
 }
 
 func (a *NgingFtpPermission) UpdatexFields(mw func(db.Result) db.Result, kvset map[string]interface{}, args ...interface{}) (affected int64, err error) {
@@ -487,13 +416,13 @@ func (a *NgingFtpPermission) UpdatexFields(mw func(db.Result) db.Result, kvset m
 	for column := range kvset {
 		editColumns = append(editColumns, column)
 	}
-	if err = DBI.FireUpdate("updating", &m, editColumns, mw, args...); err != nil {
+	if err = a.base.FireUpdate(factory.EventUpdating, &m, editColumns, mw, args...); err != nil {
 		return
 	}
 	if affected, err = a.Param(mw, args...).SetSend(kvset).Updatex(); err != nil {
 		return
 	}
-	err = DBI.FireUpdate("updated", &m, editColumns, mw, args...)
+	err = a.base.FireUpdate(factory.EventUpdated, &m, editColumns, mw, args...)
 	return
 }
 
@@ -503,13 +432,13 @@ func (a *NgingFtpPermission) UpdateValues(mw func(db.Result) db.Result, keysValu
 	}
 	m := *a
 	m.FromRow(keysValues.Map())
-	if err = DBI.FireUpdate("updating", &m, keysValues.Keys(), mw, args...); err != nil {
+	if err = a.base.FireUpdate(factory.EventUpdating, &m, keysValues.Keys(), mw, args...); err != nil {
 		return
 	}
 	if err = a.Param(mw, args...).SetSend(keysValues).Update(); err != nil {
 		return
 	}
-	return DBI.FireUpdate("updated", &m, keysValues.Keys(), mw, args...)
+	return a.base.FireUpdate(factory.EventUpdated, &m, keysValues.Keys(), mw, args...)
 }
 
 func (a *NgingFtpPermission) Upsert(mw func(db.Result) db.Result, args ...interface{}) (pk interface{}, err error) {
@@ -521,7 +450,7 @@ func (a *NgingFtpPermission) Upsert(mw func(db.Result) db.Result, args ...interf
 		if !a.base.Eventable() {
 			return nil
 		}
-		return DBI.Fire("updating", a, mw, args...)
+		return a.base.Fire(factory.EventUpdating, a, mw, args...)
 	}, func() error {
 		a.Created = uint(time.Now().Unix())
 		a.Id = 0
@@ -531,7 +460,7 @@ func (a *NgingFtpPermission) Upsert(mw func(db.Result) db.Result, args ...interf
 		if !a.base.Eventable() {
 			return nil
 		}
-		return DBI.Fire("creating", a, nil)
+		return a.base.Fire(factory.EventCreating, a, nil)
 	})
 	if err == nil && pk != nil {
 		if v, y := pk.(uint); y {
@@ -542,9 +471,9 @@ func (a *NgingFtpPermission) Upsert(mw func(db.Result) db.Result, args ...interf
 	}
 	if err == nil && a.base.Eventable() {
 		if pk == nil {
-			err = DBI.Fire("updated", a, mw, args...)
+			err = a.base.Fire(factory.EventUpdated, a, mw, args...)
 		} else {
-			err = DBI.Fire("created", a, nil)
+			err = a.base.Fire(factory.EventCreated, a, nil)
 		}
 	}
 	return
@@ -555,13 +484,13 @@ func (a *NgingFtpPermission) Delete(mw func(db.Result) db.Result, args ...interf
 	if !a.base.Eventable() {
 		return a.Param(mw, args...).Delete()
 	}
-	if err = DBI.Fire("deleting", a, mw, args...); err != nil {
+	if err = a.base.Fire(factory.EventDeleting, a, mw, args...); err != nil {
 		return
 	}
 	if err = a.Param(mw, args...).Delete(); err != nil {
 		return
 	}
-	return DBI.Fire("deleted", a, mw, args...)
+	return a.base.Fire(factory.EventDeleted, a, mw, args...)
 }
 
 func (a *NgingFtpPermission) Deletex(mw func(db.Result) db.Result, args ...interface{}) (affected int64, err error) {
@@ -569,13 +498,13 @@ func (a *NgingFtpPermission) Deletex(mw func(db.Result) db.Result, args ...inter
 	if !a.base.Eventable() {
 		return a.Param(mw, args...).Deletex()
 	}
-	if err = DBI.Fire("deleting", a, mw, args...); err != nil {
+	if err = a.base.Fire(factory.EventDeleting, a, mw, args...); err != nil {
 		return
 	}
 	if affected, err = a.Param(mw, args...).Deletex(); err != nil {
 		return
 	}
-	err = DBI.Fire("deleted", a, mw, args...)
+	err = a.base.Fire(factory.EventDeleted, a, mw, args...)
 	return
 }
 
@@ -625,6 +554,12 @@ func (a *NgingFtpPermission) AsMap(onlyFields ...string) param.Store {
 		}
 	}
 	return r
+}
+
+func (a *NgingFtpPermission) Clone() *NgingFtpPermission {
+	cloned := NgingFtpPermission{Id: a.Id, TargetType: a.TargetType, TargetId: a.TargetId, Permission: a.Permission, Created: a.Created, Updated: a.Updated}
+	cloned.CtxFrom(a)
+	return &cloned
 }
 
 func (a *NgingFtpPermission) FromRow(row map[string]interface{}) {
@@ -781,12 +716,13 @@ func (a *NgingFtpPermission) ListPageByOffsetAs(recv interface{}, cond *db.Compo
 }
 
 func (a *NgingFtpPermission) BatchValidate(kvset map[string]interface{}) error {
-	if kvset == nil {
-		kvset = a.AsRow()
-	}
-	return DBI.Fields.BatchValidate(a.Short_(), kvset)
+	return a.base.BatchValidate(a, kvset)
 }
 
-func (a *NgingFtpPermission) Validate(field string, value interface{}) error {
-	return DBI.Fields.Validate(a.Short_(), field, value)
+func (a *NgingFtpPermission) Validate(column string, value interface{}) error {
+	return a.base.Validate(a, column, value)
+}
+
+func (a *NgingFtpPermission) TrimOverflowText(column string, value string) string {
+	return a.base.TrimOverflowText(a, column, value)
 }
