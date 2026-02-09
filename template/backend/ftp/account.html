@@ -68,7 +68,7 @@
                                         {{else}}
                                         <td class="color-success">{{"允许连接"|$.T}}</td>
                                         {{end}}
-										<td class="text-center">
+										<td class="text-center label-group">
 										<a class="label label-default" href="{{BackendURL}}/ftp/account_add?copyId={{$v.Id}}" title="{{`复制`|$.T}}"><i class="fa fa-copy"></i></a>
 										<a class="label label-success" href="{{BackendURL}}/ftp/account_edit?id={{$v.Id}}"><i class="fa fa-pencil"></i></a> 
 										<a class="label label-danger" href="{{BackendURL}}/ftp/account_delete?id={{$v.Id}}" onclick="return confirm('{{`真的要删除吗？`|$.T}}');"><i class="fa fa-times"></i></a>
