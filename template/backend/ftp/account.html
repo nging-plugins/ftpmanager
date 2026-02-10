@@ -9,53 +9,53 @@
 				<div class="col-md-12">
 					<div class="block-flat no-padding">
 						<div class="header">
-							<div class="pull-right" style="margin-left:10px">
-								<form class="form-horizontal" action="" id="search-form" method="GET">
-								<div class="input-group">
+							<div class="pull-right">
+							    <div class="pull-left">
+								{{- if CmdIsRunning `ftpserver` -}}
+                				    <span class="label label-success label-btn-size x-block">{{$.T `运行中(端口:%d)` $.Stored.listenPort}}</span>
+                    			 {{- else -}}
+                				    <span class="label label-default label-btn-size x-block" data-toggle="tooltip" data-container="body" title="{{$.T `请确保有可用账号且FTP端口(%d)未被占用` $.Stored.listenPort}}">{{`已停止`|$.T}}</span>
+                    			 {{- end -}}
+                                </div>
+							    <button type="button" class="btn btn-warning" data-ajax-url="{{BackendURL}}/ftp/restart" data-ajax-onsuccess="window.location.reload();" title="{{`重启FTP服务`|$.T}}" style="margin-left:10px">
+                				    <i class="fa fa-refresh"></i> {{"重启"|$.T}}
+                			     </button>
+							    <a href="{{BackendURL}}/ftp/account_add" class="btn btn-success" style="margin-right:10px">
+								    <i class="fa fa-plus"></i>
+								    {{"添加FTP账号"|$.T}}
+							    </a>
+								<form class="form-horizontal pull-right" action="" id="search-form" method="GET">
+								<div class="input-group" style="max-width:150px">
                 					<span class="input-group-addon">{{"分组"|$.T}}</span>
 									<select name="groupId" class="form-control" id="groupId" onchange="$('#search-form').submit()">
 										<option value="0"> - {{"不限"|$.T}} - </option>
-										{{$groupId := $.Stored.groupId}}
-										{{range $k, $v := $.Stored.groupList}}
+										{{- $groupId := $.Stored.groupId}}
+										{{- range $k, $v := $.Stored.groupList}}
 										<option value="{{$v.Id}}"{{if eq $groupId $v.Id}} selected{{end}}>{{$v.Name}}</option>
-										{{end}}
+										{{- end}}
 									</select>
 						  		</div>
 								</form>
 							</div>
-							<a href="{{BackendURL}}/ftp/account_add" class="btn btn-success pull-right">
-								<i class="fa fa-plus"></i>
-								{{"添加FTP账号"|$.T}}
-							</a>
-							<button type="button" class="btn btn-warning pull-right" data-ajax-url="{{BackendURL}}/ftp/restart" data-ajax-onsuccess="window.location.reload();" title="{{`重启FTP服务`|$.T}}">
-                				<i class="fa fa-refresh"></i> {{"重启"|$.T}}
-                			</button>
-							<div class="pull-right">
-							{{- if CmdIsRunning `ftpserver` -}}
-                				<span class="label label-success label-btn-size x-block">{{$.T `运行中(端口:%d)` $.Stored.listenPort}}</span>
-                			{{- else -}}
-                				<span class="label label-default label-btn-size x-block" data-toggle="tooltip" data-container="body" title="{{$.T `请确保有可用账号且FTP端口(%d)未被占用` $.Stored.listenPort}}">{{`已停止`|$.T}}</span>
-                			{{- end -}}
-							</div>
 							<h3>{{"FTP账号列表"|$.T}}</h3>
 						</div>
 						<div class="content">
-							<div class="table-responsive">
+							<div class="table-responsive" data-pattern="priority-columns">
 							<table class="table no-border hover">
 								<thead class="no-border">
 									<tr>
 										<th style="width:60px"><strong>UID</strong></th>
 										<th><strong>{{"账户名"|$.T}}</strong></th>
-										<th><strong>{{"用户组"|$.T}}</strong></th>
-										<th><strong>{{"授权目录"|$.T}}</strong></th>
-										<th style="width:130px"><strong>{{"创建时间"|$.T}}</strong></th>
-										<th style="width:130px"><strong>{{"更新时间"|$.T}}</strong></th>
-										<th><strong>{{"状态"|$.T}}</strong></th>
+										<th data-priority="1"><strong>{{"用户组"|$.T}}</strong></th>
+										<th data-priority="2"><strong>{{"授权目录"|$.T}}</strong></th>
+										<th data-priority="3" style="width:130px"><strong>{{"创建时间"|$.T}}</strong></th>
+										<th data-priority="4" style="width:130px"><strong>{{"更新时间"|$.T}}</strong></th>
+										<th data-priority="1"><strong>{{"状态"|$.T}}</strong></th>
 										<th style="width:120px" class="text-center"><strong>{{"操作"|$.T}}</strong></th>
 									</tr>
 								</thead>
 								<tbody class="no-border-y">
-                                    {{range $k,$v := $.Stored.listData}}
+                                    {{- range $k,$v := $.Stored.listData}}
 									<tr>
 										<td>{{$v.Id}}</td>
 										<td>{{$v.Username}}</td>
@@ -70,17 +70,17 @@
                                         {{end}}
 										<td class="text-center label-group">
 										<a class="label label-default" href="{{BackendURL}}/ftp/account_add?copyId={{$v.Id}}" title="{{`复制`|$.T}}"><i class="fa fa-copy"></i></a>
-										<a class="label label-success" href="{{BackendURL}}/ftp/account_edit?id={{$v.Id}}"><i class="fa fa-pencil"></i></a> 
+										<a class="label label-success" href="{{BackendURL}}/ftp/account_edit?id={{$v.Id}}"><i class="fa fa-pencil"></i></a>
 										<a class="label label-danger" href="{{BackendURL}}/ftp/account_delete?id={{$v.Id}}" onclick="return confirm('{{`真的要删除吗？`|$.T}}');"><i class="fa fa-times"></i></a>
 										</td>
 									</tr>
-                                    {{end}}
+                                    {{- end}}
 								</tbody>
-							</table>		
+							</table>
 							</div>
 							{{$.Stored.pagination.Render}}
 						</div>
-					</div>				
+					</div>
 				</div>
 			</div>
 {{/Block}}
